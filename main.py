@@ -10,7 +10,7 @@ def extract_device_name_from_url(url):
     match = pattern.search(url)
     return match.group() if match else 'Unknown Device'
 
-DATABASE_URI = 
+DATABASE_URI = 'mysql+pymysql://root:1234@localhost:3305/crwal'
 engine = create_engine(DATABASE_URI)
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
@@ -33,14 +33,15 @@ def save_to_db(data, column_mapping):
 
 def crawl_and_save(url, brand,device_name):
     if brand == 'apple':
-        result = crawl_apple_data(url)
+        result = crawl_apple_data(url,device_name)
         column_mapping = {
             '마감': 'finish',
             '저장 용량1': 'storage_capacity',
             '크기 및 무게2': 'size_and_weight',
             '디스플레이': 'display',
             '칩': 'chip',
-            '상품정보표시':'releaseDate'
+            '상품정보표시':'release_date',
+            '이미지': 'images'
         }
     elif brand == 'samsung':
         column_mapping = {
@@ -49,7 +50,7 @@ def crawl_and_save(url, brand,device_name):
             '외관 사양': 'size_and_weight',
             '디스플레이': 'display',
             '프로세서': 'chip',
-            '상품 기본정보':'releaseDate'
+            '상품 기본정보':'release_date'
         }
         result = crawl_samsung_data(url, device_name)
     else:
@@ -62,11 +63,9 @@ def crawl_and_save(url, brand,device_name):
 
 if __name__ == "__main__":
     apple_url = 'https://www.apple.com/kr/{}/specs/'
-    apple_device_identifier ='iphone-14'
+    apple_device_identifier ='iphone-15-pro'
     apple_url=apple_url.format(apple_device_identifier)
     
-    apple_device_name = extract_device_name_from_url(apple_url)
-
     samsung_url= 'https://www.samsung.com/sec/smartphones/{}/specs/'
     device_identifier = 'galaxy-s24-ultra'
     samsung_url = samsung_url.format(device_identifier)   
@@ -74,7 +73,7 @@ if __name__ == "__main__":
     samsung_device_name = extract_device_name_from_url(samsung_url)
 
     print("애플 사양 크롤링 및 저장")
-    crawl_and_save(apple_url, 'apple',apple_device_name)
+    crawl_and_save(apple_url, 'apple',apple_device_identifier)
     
     print("\n삼성 사양 크롤링 및 저장")
     crawl_and_save(samsung_url, 'samsung',samsung_device_name)
