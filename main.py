@@ -50,7 +50,8 @@ def crawl_and_save(url, brand,device_name):
             '외관 사양': 'size_and_weight',
             '디스플레이': 'display',
             '프로세서': 'chip',
-            '상품 기본정보':'release_date'
+            '상품 기본정보':'release_date',
+            '이미지': 'images'
         }
         result = crawl_samsung_data(url, device_name)
     else:
