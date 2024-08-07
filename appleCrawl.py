@@ -66,6 +66,7 @@ def crawl_apple_data(url,device_version):
                                     initialize_device_result(result, device_name)
                                     result[device_name]['색상'] = color
                                     result[device_name]['마감'] = finish
+                                    
                         else: #iphone이 하나일 경우
                             content = finish_column.find_all('div')
                             finishs = content[0].find_all('p')
@@ -77,6 +78,28 @@ def crawl_apple_data(url,device_version):
                                     initialize_device_result(result, device_name)
                                     result[device_name]['색상'] = color
                                     result[device_name]['마감'] = finish
+
+                elif rowheader_text == '저장 용량1':
+                    # 모든 'techspecs-column' 요소를 찾기
+                    techspecs_columns = row.find_all('div', class_='techspecs-column')
+                    
+                    for idx, techspecs_column in enumerate(techspecs_columns):
+                        # 'ul' 요소를 찾기
+                        ul = techspecs_column.find('ul', class_='techspecs-list')
+                        if ul:
+                            # 'li' 요소들을 찾기
+                            lis = ul.find_all('li', role='listitem')
+                            # 각 'li'의 내용을 추출
+                            capacities = [li.get_text(strip=True) for li in lis]
+                            
+                            # 'strong' 태그로부터 장치 이름을 추출
+                            strong_tag = techspecs_column.find('strong', class_='techspecs-small-heading')
+                            if strong_tag:
+                                device_name = strong_tag.get_text(strip=True)
+                                if idx < len(device_names):
+                                    device_name = device_names[idx]
+                                    initialize_device_result(result, device_name)
+                                    result[device_name]['저장 용량'] = capacities
 
                 elif rowheader_text == '크기 및 무게2':
                     size_columns = rowheader.find_next_siblings('div', role='cell gridcell')
