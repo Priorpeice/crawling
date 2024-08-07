@@ -10,7 +10,7 @@ def extract_device_name_from_url(url):
     match = pattern.search(url)
     return match.group() if match else 'Unknown Device'
 
-DATABASE_URI = 'mysql+pymysql://root:1234@localhost:3305/crwal'
+DATABASE_URI = 
 engine = create_engine(DATABASE_URI)
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
@@ -35,10 +35,16 @@ def crawl_and_save(url, brand,device_name):
     if brand == 'apple':
         result = crawl_apple_data(url,device_name)
         column_mapping = {
+            '색상': 'color',
             '마감': 'finish',
             '저장 용량1': 'storage_capacity',
-            '크기 및 무게2': 'size_and_weight',
+            '가로': 'width',
+            '세로': 'length',
+            '두께': 'height',
+            '무게': 'weight',
             '디스플레이': 'display',
+            '대각선': 'diagonal',
+            '해상도': 'resolution',
             '칩': 'chip',
             '상품정보표시':'release_date',
             '이미지': 'images'
@@ -64,7 +70,7 @@ def crawl_and_save(url, brand,device_name):
 
 if __name__ == "__main__":
     apple_url = 'https://www.apple.com/kr/{}/specs/'
-    apple_device_identifier ='iphone-15-pro'
+    apple_device_identifier ='iphone-13'
     apple_url=apple_url.format(apple_device_identifier)
     
     samsung_url= 'https://www.samsung.com/sec/smartphones/{}/specs/'
