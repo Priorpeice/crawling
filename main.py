@@ -36,7 +36,6 @@ def crawl_and_save(url, brand,device_name):
         result = crawl_apple_data(url,device_name)
         column_mapping = {
             '색상': 'color',
-            '마감': 'finish',
             '저장 용량1': 'storage_capacity',
             '가로': 'width',
             '세로': 'length',
@@ -51,12 +50,17 @@ def crawl_and_save(url, brand,device_name):
         }
     elif brand == 'samsung':
         column_mapping = {
-            '색상': 'finish',
-            '메모리/스토리지(저장 용량)': 'storage_capacity',
-            '외관 사양': 'size_and_weight',
+            '색상': 'color',
+            '저장 용량': 'storage_capacity',
+            '가로': 'width',
+            '세로': 'length',
+            '두께': 'height',
+            '무게': 'weight',
             '디스플레이': 'display',
+            '대각선': 'diagonal',
+            '해상도': 'resolution',
             '프로세서': 'chip',
-            '상품 기본정보':'release_date',
+            '출시년월':'release_date',
             '이미지': 'images'
         }
         result = crawl_samsung_data(url, device_name)
@@ -70,7 +74,7 @@ def crawl_and_save(url, brand,device_name):
 
 if __name__ == "__main__":
     apple_url = 'https://www.apple.com/kr/{}/specs/'
-    apple_device_identifier ='iphone-13'
+    apple_device_identifier ='iphone-14'
     apple_url=apple_url.format(apple_device_identifier)
     
     samsung_url= 'https://www.samsung.com/sec/smartphones/{}/specs/'

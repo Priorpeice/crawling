@@ -36,10 +36,13 @@ def crawl_apple_data(url,device_version):
                             result[device_name][rowheader_text] = chip_data
                 elif rowheader_text == '상품정보표시':
                     uls = row.find_all('ul', class_='techspecs-list-disc')
-                    for ul in uls:
-                        lis = ul.find_all('li', role='listitem')
-                        for li in lis:
-                            li_text = li.get_text(strip=True)
+                    
+                    if len(uls) > 1:
+                        second_ul = uls[1]
+                        lis = second_ul.find_all('li', role='listitem')
+                        if lis:
+                            first_li = lis[0]
+                            li_text = first_li.get_text(strip=True)
                             if ':' in li_text:
                                 key, value = li_text.split(':', 1)
                                 key = key.strip()
@@ -48,7 +51,7 @@ def crawl_apple_data(url,device_version):
                                     initialize_device_result(result, device_name)
                                     if rowheader_text not in result[device_name]:
                                         result[device_name][rowheader_text] = []
-                                    result[device_name][rowheader_text].append(f"{key}: {value}")
+                                    result[device_name][rowheader_text].append(value)
                 elif rowheader_text == '마감': 
                     finish_columns = rowheader.find_next_siblings('div', role='cell gridcell')
                     for idx, finish_column in enumerate(finish_columns):
